@@ -1,0 +1,92 @@
+p {
+  z-index: 3;
+  text-align: center;
+  font-weight: 600;
+}
+
+.big0 {
+  font-size: 10vw;
+  text-shadow:
+    -6px -6px 0 var(--secondary-color),
+    6px -6px 0 var(--secondary-color),
+    -6px 6px 0 var(--secondary-color),
+    6px 6px 0 var(--secondary-color);
+}
+
+.logo {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  height:13vh;
+  width: 13vw;
+  border-radius: 20px;
+  
+}
+
+.line {
+  position: absolute;
+  z-index: 1;
+  transform-origin: center;
+  width: 20vw;
+  height: 2px;
+  background-color: black;
+  border: none;
+  animation: rotate 30s ease-in-out infinite alternate;
+}
+
+.l2 {
+  transform: rotate(18deg);
+}
+
+.l3 {
+  transform: rotate(36deg);
+}
+
+.l4 {
+  transform: rotate(54deg);
+}
+
+.l5 {
+  transform: rotate(72deg);
+}
+
+.l6 {
+  transform: rotate(90deg);
+}
+
+.l7 {
+  transform: rotate(108deg);
+}
+
+.l8 {
+  transform: rotate(126deg);
+}
+
+.l9 {
+  transform: rotate(144deg);
+}
+
+.l10 {
+  transform: rotate(162deg);
+}
+
+@keyframes rotate {
+  0% {
+    rotate: 0deg;
+  }
+
+  100% {
+    rotate: 360deg;
+  }
+}
+
+.hidehole {
+  position: absolute;
+  height: 5vw;
+  width: 3vw;
+  background-color: var(--secondary-color);
+  z-index: 2;
+  border-radius: 50%;
+}
