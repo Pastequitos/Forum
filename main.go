@@ -9,7 +9,6 @@ import (
 )
 
 func main() {
-	// Display les pages
 	http.HandleFunc("/", controllers.Index)
 	http.HandleFunc("/home", controllers.Home)
 	http.HandleFunc("/signup", controllers.Signup)
