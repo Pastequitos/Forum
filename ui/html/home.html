@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HOME</title>
-<!--     <link rel="stylesheet" href="../static/css/style.css"> -->
+    <!--     <link rel="stylesheet" href="../static/css/style.css"> -->
 </head>
+
 <body>
     <header class="vertical-header">
         <div class="container">
@@ -22,14 +24,29 @@
                 <div class="form-group">
                     <button type="submit">Post</button>
                 </div>
-                
             </form>
-        <a href="/">Home</a>
-        <a href="/signup">Sign Up</a>
-        <form action="/logout" method="post">
-            <button type="submit">Log out</button>
-        </form>
+            <a href="/">Home</a>
+            <a href="/signup">Sign Up</a>
+            <form action="/logout" method="post">
+                <button type="submit">Log out</button>
+            </form>
+        </div>
+    </header>
+
+    <div class="container">
+        <h3>Recent Posts</h3>
+        <ul>
+            {{range .Posts}}
+            <li>
+                <h4>{{.Title}}</h4>
+                <p>{{.Content}}</p>
+                <p>Posted by: {{.UserID}} on {{.Date}}</p>
+            </li>
+            {{end}}
+        </ul>
+    </div>
 
     </header>
 </body>
+
 </html>
