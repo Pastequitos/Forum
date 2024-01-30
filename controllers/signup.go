@@ -69,7 +69,6 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 				fmt.Println(err)
 				return
 			}
-
 			http.Redirect(w, r, "/home", http.StatusSeeOther)
 		}
 

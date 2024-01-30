@@ -3,14 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="../static/css/style.css">
+    <title>HOME</title>
+<!--     <link rel="stylesheet" href="../static/css/style.css"> -->
 </head>
 <body>
     <header class="vertical-header">
-        quoikoubeh
+        <div class="container">
+            <h2>HOME</h2>
+            <form action="/home" method="post">
+                <div class="form-group">
+                    <label for="title">Title:</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="content">Content:</label>
+                    <input type="text" id="content" name="content" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Post</button>
+                </div>
+                
+            </form>
         <a href="/">Home</a>
         <a href="/signup">Sign Up</a>
+        <form action="/logout" method="post">
+            <button type="submit">Log out</button>
+        </form>
+
     </header>
 </body>
 </html>

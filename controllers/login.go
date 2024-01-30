@@ -8,7 +8,7 @@ import (
 )
 
 func Login(w http.ResponseWriter, r *http.Request) {
-	errmsg := "Wrong username or password"
+	var errmsg []string
 	if r.Method == http.MethodPost {
 		username := r.FormValue("username")
 		password := r.FormValue("password")
@@ -39,7 +39,15 @@ func Login(w http.ResponseWriter, r *http.Request) {
 			if password != dbPassword {
 				errmsg = append(errmsg, "Wrong password")
 			} else {
-				// Password is correct, redirect to home page
+				// Password is correct, set a cookie with the user ID
+				cookie := http.Cookie{
+					Name:  "user_id",
+					Value: username, // Use the username as the user ID for demonstration purposes
+					Path:  "/",
+				}
+				http.SetCookie(w, &cookie)
+
+				// Redirect to the home page
 				http.Redirect(w, r, "/home", http.StatusSeeOther)
 				return
 			}
