@@ -14,6 +14,9 @@ func main() {
 	http.HandleFunc("/signup", controllers.Signup)
 	http.HandleFunc("/login", controllers.Login)
 	http.HandleFunc("/logout", controllers.Logout)
+	http.HandleFunc("/addcomment", controllers.AddComment)
+
+	
 
 
 

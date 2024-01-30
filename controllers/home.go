@@ -17,6 +17,7 @@ type Post struct {
 	Content     string
 	Date        string
 	NumComments int
+	Comments    []Comment // Slice of comments associated with this post
 }
 
 func Home(w http.ResponseWriter, r *http.Request) {
@@ -61,14 +62,8 @@ func Home(w http.ResponseWriter, r *http.Request) {
 		}
 		http.Redirect(w, r, "/home", http.StatusSeeOther)
 	}
-/* 	ts := template.Must(template.ParseFiles("./ui/html/home.html"))
-	err := ts.Execute(w, nil)
-	if err != nil {
-		log.Print(err.Error())
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	} */
 
+	// Fetching posts
 	db, err := sql.Open("sqlite", "database.db")
 	if err != nil {
 		log.Println("Error opening database:", err)
@@ -77,7 +72,6 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	// Query the database to fetch posts
 	rows, err := db.Query("SELECT id, user_id, title, content, date, num_com FROM data_post ORDER BY id DESC")
 	if err != nil {
 		log.Println("Error fetching posts from database:", err)
@@ -86,13 +80,37 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	}
 	defer rows.Close()
 
-	// Iterate over the rows and populate the posts slice
 	for rows.Next() {
 		var post Post
 		if err := rows.Scan(&post.ID, &post.UserID, &post.Title, &post.Content, &post.Date, &post.NumComments); err != nil {
 			log.Println("Error scanning post row:", err)
 			continue
 		}
+
+		// Fetching comments for each post
+		commentRows, err := db.Query("SELECT post_id, user_id, comment, date FROM data_comments WHERE post_id = ?", post.ID)
+		if err != nil {
+			log.Println("Error fetching comments for post ID", post.ID, ":", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+		defer commentRows.Close()
+
+		for commentRows.Next() {
+			var comment Comment
+			if err := commentRows.Scan(&comment.PostID, &comment.UserID, &comment.Content, &comment.Date); err != nil {
+				log.Println("Error scanning comment row:", err)
+				continue
+			}
+			post.Comments = append(post.Comments, comment)
+		}
+		if err := commentRows.Err(); err != nil {
+			log.Println("Error iterating over comment rows:", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+
+		// Append the post to the posts slice
 		posts = append(posts, post)
 	}
 	if err := rows.Err(); err != nil {
