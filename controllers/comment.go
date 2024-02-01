@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -21,7 +20,6 @@ type Comment struct {
 
 // AddComment handles adding comments to posts.
 func AddComment(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("commented")
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -45,12 +43,7 @@ func AddComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	userID := cookie.Value
-	date := time.Now()
-
-	fmt.Println(postID)
-	fmt.Println(content)
-	fmt.Println(userID)
-	fmt.Println(date)
+	date := time.Now().Format("15h04 2 Jan 2006")
 
 	// Open the database connection
 	db, err := sql.Open("sqlite", "database.db")
@@ -61,10 +54,17 @@ func AddComment(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	// Insert comment into the database
 	_, err = db.Exec("INSERT INTO data_comments (post_id, user_id, comment, date) VALUES (?, ?, ?, ?)", postID, userID, content, date)
 	if err != nil {
 		log.Println("Error inserting comment into database:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	// Update num_com for the corresponding post
+	_, err = db.Exec("UPDATE data_post SET num_com = num_com + 1 WHERE id = ?", postID)
+	if err != nil {
+		log.Println("Error updating num_com:", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}

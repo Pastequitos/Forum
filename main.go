@@ -9,14 +9,15 @@ import (
 )
 
 func main() {
+
+	
 	http.HandleFunc("/", controllers.Index)
 	http.HandleFunc("/home", controllers.Home)
 	http.HandleFunc("/signup", controllers.Signup)
 	http.HandleFunc("/login", controllers.Login)
 	http.HandleFunc("/logout", controllers.Logout)
 	http.HandleFunc("/addcomment", controllers.AddComment)
-
-	
+	http.HandleFunc("/resetdatabase", controllers.ResetDatabase)
 
 
 
@@ -38,8 +39,8 @@ func main() {
 		static.ServeHTTP(w, r)
 	})
 
-	log.Print("Starting server on http://localhost:3000")
-	err := http.ListenAndServe(":3000", nil)
+	log.Print("Starting server on http://localhost:3003")
+	err := http.ListenAndServe(":3003", nil)
 	log.Fatal(err)
 }
 
@@ -56,3 +57,5 @@ func getContentType(filePath string) string {
 		return "application/octet-stream" // Default content type
 	}
 }
+
+

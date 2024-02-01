@@ -16,6 +16,7 @@ type Post struct {
 	Title       string
 	Content     string
 	Date        string
+	Category    string
 	NumComments int
 	Comments    []Comment // Slice of comments associated with this post
 }
@@ -27,7 +28,8 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		title := r.FormValue("title")
 		content := r.FormValue("content")
-		date := time.Now()
+		date := time.Now().Format("15h04 2 Jan 2006")
+		category := r.FormValue("category")
 		cookie, err := r.Cookie("user_id")
 		if err != nil {
 			log.Println("Error getting user ID from cookie:", err)
@@ -42,19 +44,27 @@ func Home(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		defer db.Close()
+
 		// Query the database to get the maximum ID currently in use
-		var maxID int
-		row := db.QueryRow("SELECT MAX(id) FROM data_post")
+		var maxID sql.NullInt64
+		row := db.QueryRow("SELECT COALESCE(MAX(id), 0) FROM data_post")
 		err = row.Scan(&maxID)
 		if err != nil {
 			log.Println("Error getting maximum post ID:", err)
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
+
+		// Check if maxID is NULL
+		if !maxID.Valid {
+			// No posts in the database, set maxID to 0 or any other default value
+			maxID.Int64 = 0
+		}
+
 		// Increment the maxID to get the new post ID
-		newID := maxID + 1
-		insertPost := "INSERT INTO data_post (id, user_id, title, content, date, num_com) VALUES (?, ?, ?, ?, ?, ?)"
-		_, err = db.Exec(insertPost, newID, userID, title, content, date, 0)
+		newID := int(maxID.Int64) + 1
+		insertPost := "INSERT INTO data_post (id, user_id, title, content, date, num_com, category) VALUES (?, ?, ?, ?, ?, ?, ?)"
+		_, err = db.Exec(insertPost, newID, userID, title, content, date, 0, category)
 		if err != nil {
 			log.Println("Error inserting post into database:", err)
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -72,7 +82,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	rows, err := db.Query("SELECT id, user_id, title, content, date, num_com FROM data_post ORDER BY id DESC")
+	rows, err := db.Query("SELECT id, user_id, title, content, date, num_com, category FROM data_post ORDER BY id DESC")
 	if err != nil {
 		log.Println("Error fetching posts from database:", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -82,7 +92,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 
 	for rows.Next() {
 		var post Post
-		if err := rows.Scan(&post.ID, &post.UserID, &post.Title, &post.Content, &post.Date, &post.NumComments); err != nil {
+		if err := rows.Scan(&post.ID, &post.UserID, &post.Title, &post.Content, &post.Date, &post.NumComments, &post.Category); err != nil {
 			log.Println("Error scanning post row:", err)
 			continue
 		}

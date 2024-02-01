@@ -9,6 +9,11 @@
 </head>
 
 <body>
+
+    <form action="/resetdatabase" method="post">
+        <button type="submit">Reset Database</button>
+    </form>
+
     <header class="vertical-header">
         <div class="container">
             <h2>HOME</h2>
@@ -21,10 +26,20 @@
                     <label for="content">Content:</label>
                     <input type="text" id="content" name="content" required>
                 </div>
+
+                <select id="category-select" name="category">
+                    <option value="mood">Mood</option>
+                    <option value="vg">Video-games</option>
+                    <option value="sport">Sport</option>
+                    <option value="music">Music</option>
+                </select>
+
                 <div class="form-group">
                     <button type="submit">Post</button>
                 </div>
             </form>
+
+
             <a href="/">Home</a>
             <a href="/signup">Sign Up</a>
             <form action="/logout" method="post">
@@ -42,6 +57,7 @@
                 <p>{{.Content}}</p>
                 <p>Posted by: {{.UserID}} on {{.Date}}</p>
                 <p>Number of Comments: {{.NumComments}}</p>
+                <p>Category: {{.Category}}</p>
                 <!-- Form for adding comments -->
                 <form action="/addcomment" method="post">
                     <input type="hidden" name="post_id" value="{{.ID}}">
