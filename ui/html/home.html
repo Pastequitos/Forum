@@ -48,6 +48,19 @@
         </div>
     </header>
 
+    <form action="/filter" method="post">
+        <div class="category-filter">
+            <select id="category-select" name="category">
+                <option value="mood">Mood</option>
+                <option value="vg">Video-games</option>
+                <option value="sport">Sport</option>
+                <option value="music">Music</option>
+            </select>
+        </div>
+        <button type="submit">Filter</button>
+
+    </form>
+
     <div class="container">
         <h3>Recent Posts</h3>
         <ul>

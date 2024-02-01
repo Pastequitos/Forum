@@ -18,7 +18,7 @@ type Post struct {
 	Date        string
 	Category    string
 	NumComments int
-	Comments    []Comment // Slice of comments associated with this post
+	Comments    []Comment
 }
 
 func Home(w http.ResponseWriter, r *http.Request) {
@@ -130,7 +130,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Pass posts to the template
-	data := struct {
+	Data := struct {
 		Error []string
 		Posts []Post
 	}{
@@ -139,7 +139,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ts := template.Must(template.ParseFiles("./ui/html/home.html"))
-	err = ts.Execute(w, data)
+	err = ts.Execute(w, Data)
 	if err != nil {
 		log.Print(err.Error())
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

@@ -18,6 +18,8 @@ func main() {
 	http.HandleFunc("/logout", controllers.Logout)
 	http.HandleFunc("/addcomment", controllers.AddComment)
 	http.HandleFunc("/resetdatabase", controllers.ResetDatabase)
+	http.HandleFunc("/filter", controllers.Filter)
+
 
 
 
