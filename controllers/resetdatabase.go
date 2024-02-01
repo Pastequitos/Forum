@@ -20,5 +20,10 @@ func ResetDatabase(w http.ResponseWriter, r *http.Request) {
 	if _, err := db.Exec("DELETE FROM data_comments"); err != nil {
 		return
 	}
+
+	// Delete all rows from data_comments table
+	if _, err := db.Exec("DELETE FROM user_likeordislike"); err != nil {
+		return
+	}
 	http.Redirect(w, r, "/home", http.StatusSeeOther)
 }

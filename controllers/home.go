@@ -18,6 +18,8 @@ type Post struct {
 	Date        string
 	Category    string
 	NumComments int
+	Like        int
+	Dislike     int
 	Comments    []Comment
 }
 
@@ -37,6 +39,9 @@ func Home(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		userID := cookie.Value
+		like := 0
+		dislike := 0
+
 		db, err := sql.Open("sqlite", "database.db")
 		if err != nil {
 			log.Println("Error opening database:", err)
@@ -63,8 +68,8 @@ func Home(w http.ResponseWriter, r *http.Request) {
 
 		// Increment the maxID to get the new post ID
 		newID := int(maxID.Int64) + 1
-		insertPost := "INSERT INTO data_post (id, user_id, title, content, date, num_com, category) VALUES (?, ?, ?, ?, ?, ?, ?)"
-		_, err = db.Exec(insertPost, newID, userID, title, content, date, 0, category)
+		insertPost := "INSERT INTO data_post (id, user_id, title, content, date, num_com, category, like, dislike) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+		_, err = db.Exec(insertPost, newID, userID, title, content, date, 0, category, like, dislike)
 		if err != nil {
 			log.Println("Error inserting post into database:", err)
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -82,7 +87,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	rows, err := db.Query("SELECT id, user_id, title, content, date, num_com, category FROM data_post ORDER BY id DESC")
+	rows, err := db.Query("SELECT id, user_id, title, content, date, num_com, category, like, dislike FROM data_post ORDER BY id DESC")
 	if err != nil {
 		log.Println("Error fetching posts from database:", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -92,7 +97,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 
 	for rows.Next() {
 		var post Post
-		if err := rows.Scan(&post.ID, &post.UserID, &post.Title, &post.Content, &post.Date, &post.NumComments, &post.Category); err != nil {
+		if err := rows.Scan(&post.ID, &post.UserID, &post.Title, &post.Content, &post.Date, &post.NumComments, &post.Category, &post.Like, &post.Dislike); err != nil {
 			log.Println("Error scanning post row:", err)
 			continue
 		}

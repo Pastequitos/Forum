@@ -9,8 +9,6 @@ import (
 )
 
 func main() {
-
-	
 	http.HandleFunc("/", controllers.Index)
 	http.HandleFunc("/home", controllers.Home)
 	http.HandleFunc("/signup", controllers.Signup)
@@ -19,6 +17,8 @@ func main() {
 	http.HandleFunc("/addcomment", controllers.AddComment)
 	http.HandleFunc("/resetdatabase", controllers.ResetDatabase)
 	http.HandleFunc("/filter", controllers.Filter)
+	http.HandleFunc("/likedislike", controllers.LikeDislike)
+
 
 
 
