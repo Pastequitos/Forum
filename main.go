@@ -1,8 +1,6 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 	"path/filepath"
@@ -15,7 +13,7 @@ const (
 )
 
 func main() {
-	CreateDatabase(path)
+	controllers.CreateDatabase(path)
 
 	http.HandleFunc("/", controllers.Index)
 	http.HandleFunc("/home", controllers.Home)
@@ -62,26 +60,4 @@ func getContentType(filePath string) string {
 	default:
 		return "application/octet-stream" // Default content type
 	}
-}
-
-func CreateDatabase(path string) error {
-	db, err := sql.Open("sqlite", "database.db")
-	if err != nil {
-		log.Fatal(err)
-		return err
-	}
-	defer db.Close()
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS account_user (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		username TEXT,
-		mail TEXT,
-		password TEXT
-	);`)
-	fmt.Println("database created")
-	if err != nil {
-		log.Fatal(err)
-		return err
-
-	}
-	return nil
 }

@@ -34,8 +34,8 @@ func Home(w http.ResponseWriter, r *http.Request) {
 		category := r.FormValue("category")
 		cookie, err := r.Cookie("user_id")
 		if err != nil {
-			log.Println("Error getting user ID from cookie:", err)
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
+
 			return
 		}
 		userID := cookie.Value
