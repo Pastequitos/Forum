@@ -7,6 +7,7 @@ import (
 )
 
 func LikeDislike(w http.ResponseWriter, r *http.Request) {
+
 	// Parse the form data
 	err := r.ParseForm()
 	if err != nil {
@@ -51,7 +52,7 @@ func LikeDislike(w http.ResponseWriter, r *http.Request) {
 		// User has already performed an action on the post
 		if existingAction == likeOrDislike {
 			// If the user is trying to perform the same action again
-			http.Error(w, "You have already performed this action on this post", http.StatusBadRequest)
+			http.Redirect(w, r, "/home", http.StatusSeeOther)
 			return
 		}
 	}
@@ -63,23 +64,22 @@ func LikeDislike(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to fetch post details from database", http.StatusInternalServerError)
 		return
 	}
-// Update the like and dislike counts based on the action
-switch likeOrDislike {
-case "like":
-	if existingAction == "dislike" {
-		currentDislikes--
+	// Update the like and dislike counts based on the action
+	switch likeOrDislike {
+	case "like":
+		if existingAction == "dislike" {
+			currentDislikes--
+		}
+		currentLikes++
+	case "dislike":
+		if existingAction == "like" {
+			currentLikes--
+		}
+		currentDislikes++
+	default:
+		http.Error(w, "Invalid action", http.StatusBadRequest)
+		return
 	}
-	currentLikes++
-case "dislike":
-	if existingAction == "like" {
-		currentLikes--
-	}
-	currentDislikes++
-default:
-	http.Error(w, "Invalid action", http.StatusBadRequest)
-	return
-}
-
 
 	// Update the database with the new like and dislike counts for the post
 	_, err = db.Exec("UPDATE data_post SET like = ?, dislike = ? WHERE id = ?", currentLikes, currentDislikes, postID)

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
 	"path/filepath"
@@ -8,7 +10,13 @@ import (
 	"main/controllers"
 )
 
+const (
+	path = "database.db"
+)
+
 func main() {
+	CreateDatabase(path)
+
 	http.HandleFunc("/", controllers.Index)
 	http.HandleFunc("/home", controllers.Home)
 	http.HandleFunc("/signup", controllers.Signup)
@@ -18,10 +26,6 @@ func main() {
 	http.HandleFunc("/resetdatabase", controllers.ResetDatabase)
 	http.HandleFunc("/filter", controllers.Filter)
 	http.HandleFunc("/likedislike", controllers.LikeDislike)
-
-
-
-
 
 	// Set Static file
 	static := http.FileServer(http.Dir("ui"))
@@ -60,4 +64,24 @@ func getContentType(filePath string) string {
 	}
 }
 
+func CreateDatabase(path string) error {
+	db, err := sql.Open("sqlite", "database.db")
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	defer db.Close()
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS account_user (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		username TEXT,
+		mail TEXT,
+		password TEXT
+	);`)
+	fmt.Println("database created")
+	if err != nil {
+		log.Fatal(err)
+		return err
 
+	}
+	return nil
+}
