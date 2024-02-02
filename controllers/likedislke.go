@@ -22,8 +22,7 @@ func LikeDislike(w http.ResponseWriter, r *http.Request) {
 	// Retrieve the user ID from the cookie
 	cookie, err := r.Cookie("user_id")
 	if err != nil {
-		log.Println("Error getting user ID from cookie:", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
 		return
 	}
 
