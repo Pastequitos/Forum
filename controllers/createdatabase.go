@@ -11,7 +11,8 @@ const (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		username TEXT,
 		mail TEXT,
-		password TEXT
+		password TEXT,
+		auth_token TEXT
 	);
 
 	CREATE TABLE IF NOT EXISTS data_post (

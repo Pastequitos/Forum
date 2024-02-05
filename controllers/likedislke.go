@@ -7,7 +7,6 @@ import (
 )
 
 func LikeDislike(w http.ResponseWriter, r *http.Request) {
-
 	// Parse the form data
 	err := r.ParseForm()
 	if err != nil {
@@ -27,7 +26,7 @@ func LikeDislike(w http.ResponseWriter, r *http.Request) {
 	}
 
 	userID := cookie.Value
-
+	CheckSession(w, r)
 	// Open a database connection
 	db, err := sql.Open("sqlite", "database.db")
 	if err != nil {

@@ -42,6 +42,7 @@ func AddComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	userID := cookie.Value
+	CheckSession(w, r)
 	date := time.Now().Format("15h04 2 Jan 2006")
 
 	// Open the database connection

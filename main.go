@@ -15,7 +15,6 @@ const (
 func main() {
 	controllers.CreateDatabase(path)
 
-	http.HandleFunc("/", controllers.Index)
 	http.HandleFunc("/home", controllers.Home)
 	http.HandleFunc("/signup", controllers.Signup)
 	http.HandleFunc("/login", controllers.Login)
@@ -24,6 +23,9 @@ func main() {
 	http.HandleFunc("/resetdatabase", controllers.ResetDatabase)
 	http.HandleFunc("/filter", controllers.Filter)
 	http.HandleFunc("/likedislike", controllers.LikeDislike)
+	http.HandleFunc("/400", controllers.HandleBadRequest)
+	http.HandleFunc("/404", controllers.HandleNotFound)
+	http.HandleFunc("/500", controllers.HandleServerError)
 
 	// Set Static file
 	static := http.FileServer(http.Dir("ui"))
@@ -43,9 +45,16 @@ func main() {
 		static.ServeHTTP(w, r)
 	})
 
+	// Catch-all handler for paths that don't match any existing routes
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		controllers.HandleNotFound(w,r)
+	})
+
 	log.Print("Starting server on http://localhost:3003")
 	err := http.ListenAndServe(":3003", nil)
-	log.Fatal(err)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func getContentType(filePath string) string {

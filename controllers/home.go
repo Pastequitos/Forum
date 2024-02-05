@@ -24,9 +24,15 @@ type Post struct {
 }
 
 func Home(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/home" && r.URL.Path != "/" {
+		ErrorCode(w, r, 404, "Page not found")
+		return
+	}
+
 	var errmsg []string
 	var posts []Post
 
+	CheckSession(w, r)
 	if r.Method == http.MethodPost {
 		title := r.FormValue("title")
 		content := r.FormValue("content")

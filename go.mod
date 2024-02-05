@@ -2,7 +2,10 @@ module main
 
 go 1.20
 
-require modernc.org/sqlite v1.28.0
+require (
+	github.com/gofrs/uuid v4.4.0+incompatible
+	modernc.org/sqlite v1.28.0
+)
 
 require (
 	github.com/dustin/go-humanize v1.0.1 // indirect
