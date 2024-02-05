@@ -6,99 +6,119 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HOME</title>
     <!--     <link rel="stylesheet" href="../static/css/style.css"> -->
+    <link rel="stylesheet" href="../static/css/style.css">
+
 </head>
 
 <body>
 
-    <form action="/resetdatabase" method="post">
-        <button type="submit">Reset Database</button>
-    </form>
 
     <header class="vertical-header">
         <div class="container">
-            <h2>HOME</h2>
-            <form action="/home" method="post">
-                <div class="form-group">
-                    <label for="title">Title:</label>
-                    <input type="text" id="title" name="title" required>
-                </div>
-                <div class="form-group">
-                    <label for="content">Content:</label>
-                    <input type="text" id="content" name="content" required>
-                </div>
+            <h2 class="hometitle">HOME</h2>
+            <div class="btn-container">
+                <a href="/signup">Sign Up</a>
+                <a href="/login">Login</a>
+            </div>
 
-                <select id="category-select" name="category">
-                    <option value="mood">Mood</option>
-                    <option value="vg">Video-games</option>
-                    <option value="sport">Sport</option>
-                    <option value="music">Music</option>
-                </select>
-
-                <div class="form-group">
-                    <button type="submit">Post</button>
+            <form action="/filter" method="post">
+                <div class="category-filter">
+                    <p>Filter:</p>
+                    <select id="category-select" name="category">
+                        <div class="arrow"></div>
+                        <option value="mood">Mood</option>
+                        <option value="vg">Video-games</option>
+                        <option value="sport">Sport</option>
+                        <option value="music">Music</option>
+                    </select>
                 </div>
+                <button type="submit">Filter</button>
             </form>
 
-
-            <a href="/">Home</a>
-            <a href="/signup">Sign Up</a>
-            <form action="/logout" method="post">
-                <button type="submit">Log out</button>
-            </form>
+            <div class="bottom btn-container">
+                <form action="/logout" method="post">
+                    <button type="submit">Log out</button>
+                </form>
+                <form action="/resetdatabase" method="post">
+                    <button type="submit">Reset Database</button>
+                </form>
+            </div>
         </div>
     </header>
 
-    <form action="/filter" method="post">
-        <div class="category-filter">
+    <section class="topbar">
+
+        <form action="/home" method="post">
+
+            <div class="form-group">
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+            <div class="form-group">
+                <label for="content">Content:</label>
+                <input type="text" id="content" name="content" required>
+            </div>
+
+
             <select id="category-select" name="category">
                 <option value="mood">Mood</option>
                 <option value="vg">Video-games</option>
                 <option value="sport">Sport</option>
                 <option value="music">Music</option>
             </select>
-        </div>
-        <button type="submit">Filter</button>
 
-    </form>
+            <div class="form-group">
+                <button type="submit">Post</button>
+            </div>
+        </form>
+    </section>
 
-    <div class="container">
-        <h3>Recent Posts</h3>
-        <ul>
-            {{range .Posts}}
-            <li>
-                <h4>{{.Title}}</h4>
-                <p>{{.Content}}</p>
-                <p>Posted by: {{.UserID}} on {{.Date}}</p>
-                <p>Number of Comments: {{.NumComments}}</p>
-                <p>Category: {{.Category}}</p>
-                <p>like: {{.Like}}, dislike: {{.Dislike}}</p>
-                <form action="/likedislike" method="post">
-                    <input type="hidden" name="post_id" value="{{.ID}}">
-                    <button type="submit" name="likeordislike" value="like">Like</button>
-                    <button type="submit" name="likeordislike" value="dislike">Dislike</button>
-                </form>
-                <form action="/addcomment" method="post">
-                    <input type="hidden" name="post_id" value="{{.ID}}">
-                    <div class="form-group">
-                        <label for="comment">Add Comment:</label>
-                        <input type="text" id="comment" name="comment" required>
-                    </div>
-                    <div class="form-group">
-                        <button type="submit">Add Comment</button>
-                    </div>
-                </form>
-                <ul>
-                    {{range .Comments}}
+    <section class="post-container">
+        <div class="container">
+            <h3>Recent Posts</h3>
+            
+            
+            <ul>
+                {{range .Posts}}
+                <div class="post">
                     <li>
+                        <h4>{{.Title}}</h4>
                         <p>{{.Content}}</p>
-                        <p>Comment by: {{.UserID}} on {{.Date}}</p>
+                        <p>Posted by: {{.UserID}} on {{.Date}}</p>
+                        <p>Number of Comments: {{.NumComments}}</p>
+                        <p>Category: {{.Category}}</p>
+                        <p>like: {{.Like}}, dislike: {{.Dislike}}</p>
+                        <form action="/likedislike" method="post">
+                            <input type="hidden" name="post_id" value="{{.ID}}">
+                            <button type="submit" name="likeordislike" value="like">Like</button>
+                            <button type="submit" name="likeordislike" value="dislike">Dislike</button>
+                        </form>
+                        <form action="/addcomment" method="post">
+                            <input type="hidden" name="post_id" value="{{.ID}}">
+                            <div class="form-group">
+                                <label for="comment">Add Comment:</label>
+                                <input type="text" id="comment" name="comment" required>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit">Add Comment</button>
+                            </div>
+                        </form>
+                        <ul>
+                            {{range .Comments}}
+                            <li>
+                                <p>{{.Content}}</p>
+                                <p>Comment by: {{.UserID}} on {{.Date}}</p>
+                            </li>
+                            {{end}}
+                        </ul>
                     </li>
+                </div>
                     {{end}}
                 </ul>
-            </li>
-            {{end}}
-        </ul>
-    </div>
+        </div>
+    </section>
+
+
 </body>
 
 </html>

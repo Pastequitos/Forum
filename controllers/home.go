@@ -125,7 +125,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Append the post to the posts slice
+		// Append the post to the posts slsudo apt-get cleanice
 		posts = append(posts, post)
 	}
 	if err := rows.Err(); err != nil {
